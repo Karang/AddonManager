@@ -1,0 +1,8 @@
+name: AddonManager
+main: fr.karang.AddonManager.AddonManager
+author: Karang
+version: 1.0
+depend: [Spout]
+commands:
+  entity:
+    description: Spawn entity addon
