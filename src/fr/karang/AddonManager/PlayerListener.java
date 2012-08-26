@@ -1,14 +1,14 @@
 package fr.karang.AddonManager;
 
 import org.bukkit.event.*;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.*;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import fr.karang.AddonManager.EntityAddon.CustomEntityManager;
+import fr.karang.AddonManager.EntityAddon.*;
 
 public class PlayerListener implements Listener {
 	
-	private AddonManager plugin;
+	private final AddonManager plugin;
 	
 	public PlayerListener(AddonManager plugin) {
 		this.plugin = plugin;
@@ -16,9 +16,20 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		SpoutPlayer player = (SpoutPlayer) event.getPlayer();
-		/*for (String k : player.getAddons().keySet())
-			player.sendMessage(k + " : " + player.getAddons().get(k));*/
-		CustomEntityManager.sendCustomDesigns(player);
+		final SpoutPlayer player = (SpoutPlayer) event.getPlayer();
+		
+		plugin.getEntityManager().sendCustomDesigns(player);
+		plugin.getEntityManager().sendCustomEntities(player);
+	}
+	
+	@EventHandler
+	public void onEntityInterract(PlayerInteractEntityEvent event) {
+		SpoutPlayer p = (SpoutPlayer) event.getPlayer();
+		
+		if (event.getRightClicked() instanceof CustomEntity) {
+			CustomEntity entity = (CustomEntity) event.getRightClicked();
+			p.sendMessage("EntityId:"+entity.getCustomId());
+			entity.addPassenger(p);
+		}
 	}
 }

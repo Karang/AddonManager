@@ -12,12 +12,22 @@ import fr.karang.AddonManager.EntityAddon.*;
 public class AddonManager extends JavaPlugin {
 	
 	public static AddonManager plugin;
+	private CustomEntityManager entityManager;
 	
 	public void onEnable() {
-		AddonPacket.register(CustomEntityPacket.class, "entity");
-		AddonPacket.register(EntityDesignPacket.class, "entityDesign");
+		AddonPacket.register(PacketCustomEntity.class, "entity");
+		AddonPacket.register(PacketEntityDesign.class, "entityDesign");
+		AddonPacket.register(PacketCustomInteract.class, "entityInteract");
+		AddonPacket.register(PacketVehicle.class, "entityVehicle");
 		
-		CustomEntityManager.registerCustomDesign("https://dl.dropbox.com/u/99253345/mailbox.obj");
+		plugin = this;
+		entityManager = new CustomEntityManager();
+		
+		EntityDesign mailboxDesign = new EntityDesign("https://dl.dropbox.com/u/99253345/mailbox.obj");
+		mailboxDesign.canBeCollidedWith = true;
+		mailboxDesign.width = 1.f;
+		mailboxDesign.height = 1.f;
+		entityManager.registerCustomDesign(mailboxDesign);
 		
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 	}
@@ -32,10 +42,18 @@ public class AddonManager extends JavaPlugin {
 		entity.setDesign(0);
 		entity.setTexture("https://dl.dropbox.com/u/99253345/furnitures.png");
 		
-		CustomEntityManager.addEntity(entity);
+		entityManager.addEntity(entity);
 		
 		player.sendMessage("Entity spawn");
 		
 		return false;
+	}
+	
+	public CustomEntityManager getEntityManager() {
+		return entityManager;
+	}
+	
+	public static AddonManager getPlugin() {
+		return plugin;
 	}
 }

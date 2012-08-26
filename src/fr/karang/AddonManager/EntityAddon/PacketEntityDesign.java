@@ -6,18 +6,24 @@ import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 
-public class EntityDesignPacket extends AddonPacket {
+public class PacketEntityDesign extends AddonPacket {
 
 	private int id;
 	private String url;
+	private boolean canBeCollidedWith;
+	private float width;
+	private float height;
 	
-	public EntityDesignPacket () {
+	public PacketEntityDesign () {
 		
 	}
 	
-	public EntityDesignPacket (int id, String url) {
+	public PacketEntityDesign (int id, EntityDesign design) {
 		this.id = id;
-		this.url = url;
+		this.url = design.url;
+		this.canBeCollidedWith = design.canBeCollidedWith;
+		this.width = design.width;
+		this.height = design.height;
 	}
 
 	@Override
@@ -34,6 +40,9 @@ public class EntityDesignPacket extends AddonPacket {
 	public void write(SpoutOutputStream out) {
 		out.writeInt(id);
 		out.writeString(url);
+		out.writeBoolean(canBeCollidedWith);
+		out.writeFloat(width);
+		out.writeFloat(height);
 	}
 
 }
